@@ -1,0 +1,1104 @@
+{
+  "name": "SAGE | REC - 001 | List Dimension(s) Restricted Data",
+  "description": "When there is a function call, do action and other actions",
+  "version": 22,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "provider": "workato_recipe_function",
+    "name": "execute",
+    "as": "f5a889ec",
+    "title": null,
+    "description": null,
+    "keyword": "trigger",
+    "input": {
+    },
+    "block": [
+      {
+        "number": 1,
+        "provider": "logger",
+        "name": "log_message",
+        "as": "751a722b",
+        "title": null,
+        "description": "Log <span class=\"provider\">message</span> to <span class=\"provider\">Job report</span>",
+        "keyword": "action",
+        "input": {
+          "user_logs_enabled": "false",
+          "message": "JOB id is - #{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"f5a889ec\",\"path\":[\"context\",\"calling_job_id\"]}')}"
+        },
+        "extended_input_schema": [
+          {
+            "control_type": "switch",
+            "default": false,
+            "disable_formula": true,
+            "extends_schema": true,
+            "hint": "                Send a copy of the message to Workato logs.\n                <a href=\"https://docs.workato.com/features/logging-service.html\" target=\"_blank\" class=\"ng-scope\">\n                  Learn more\n                </a>\n",
+            "label": "Send to Workato log service",
+            "name": "user_logs_enabled",
+            "optional": true,
+            "type": "string"
+          }
+        ],
+        "uuid": "cb93a2c8-fc0f-4d2b-a548-2cac41b75624"
+      },
+      {
+        "number": 2,
+        "provider": "sage_intacct_custom__connector_908715_1678385876",
+        "name": "custom_action",
+        "as": "1536eb21",
+        "title": null,
+        "description": "<span class=\"provider\">Custom action</span> in <span class=\"provider\">Sage Intacct (Custom)</span>",
+        "keyword": "action",
+        "input": {
+          "action_name": "Custom action",
+          "operation_element": {
+            "content_data": "<getDimensionRelationships/>"
+          },
+          "response_type": "xml",
+          "array_tags": "relationship",
+          "output": "[]"
+        },
+        "extended_output_schema": [
+          {
+            "label": "Body",
+            "name": "body",
+            "optional": true,
+            "properties": [
+
+            ],
+            "type": "object"
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "control_type": "text",
+            "default": "Custom action",
+            "extends_schema": true,
+            "hint": "Give this action you're building a descriptive name, e.g. Create customer, Get customer",
+            "label": "Action name",
+            "name": "action_name",
+            "optional": false,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "hint": "Provides the content for the request. <a href='https://developer.intacct.com/web-services/requests/#operation-element' target='_blank'>Learn more</a>",
+            "label": "Operation element of XML request",
+            "name": "operation_element",
+            "optional": false,
+            "properties": [
+              {
+                "control_type": "checkbox",
+                "label": "Transaction",
+                "parse_output": "float_conversion",
+                "hint": "Specifies whether all the functions in the operation block represent a single transaction. When set to Yes, all of the functions are treated as a single transaction. If one function fails, all previously executed functions within the operation are rolled back. This is useful for groups of functions that rely on each other to change information in the database. When set to No, which is the default, functions execute independently. If one function fails, others still proceed.",
+                "toggle_hint": "Select from list",
+                "toggle_field": {
+                  "name": "transaction",
+                  "label": "Transaction",
+                  "hint": "Specifies whether all the functions in the operation block represent a single transaction. When set to true, all of the functions are treated as a single transaction. If one function fails, all previously executed functions within the operation are rolled back. This is useful for groups of functions that rely on each other to change information in the database. When set to false, which is the default, functions execute independently. If one function fails, others still proceed.",
+                  "toggle_hint": "Use custom value",
+                  "optional": true,
+                  "control_type": "text",
+                  "type": "string"
+                },
+                "optional": true,
+                "type": "number",
+                "name": "transaction"
+              },
+              {
+                "control_type": "text-area",
+                "label": "Content part of XML request",
+                "hint": "Supplies one or more function elements to be executed.  Provide a valid XML with <b>&lt;content&gt;...&lt;/content&gt;</b> tag to send with the request. <a href='https://developer.intacct.com/web-services/requests/#content-element' target='_blank'>Learn more</a>",
+                "default": "<content>\n      <!-- Search call sample -->\n      <function controlid=\"UUID-1\">\n        <readByQuery>\n          <object>LOCATION</object>\n          <fields>*</fields>\n          <query></query>\n          <pagesize>2</pagesize>\n          <returnFormat>xml</returnFormat>\n        </readByQuery>\n      </function>\n\n      <!-- Create call sample -->\n      <!--\n      <function controlid=\"UUID-2\">\n        <create>\n           <LOCATION>\n             <LOCATIONID>23</LOCATIONID>\n             <NAME>HQ</NAME>\n           </LOCATION>\n        </create>\n      </function>\n      -->\n    </content>",
+                "optional": false,
+                "type": "string",
+                "name": "content_data"
+              }
+            ],
+            "type": "object"
+          },
+          {
+            "hint": "Control element includes your Web Services credentials and applies to the entire request. <a href='https://developer.intacct.com/web-services/requests/#control-element' target='_blank'>Learn more</a>",
+            "label": "Control element of XML request",
+            "name": "control_element",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Control ID",
+                "hint": "Control ID for request as a whole.",
+                "optional": true,
+                "type": "string",
+                "name": "controlid"
+              },
+              {
+                "control_type": "checkbox",
+                "label": "Unique ID",
+                "parse_output": "float_conversion",
+                "hint": "Used in conjuction with \"Control ID\". Specifies whether a request can be submitted more than once without an error.When set to Yes, which is the default, a request cannot be repeated. The \"Control ID\" attribute of the <function> element will be checked to determine if the operation was previously executed and completed. When set to No, the system allows the operation to execute any number of times.",
+                "toggle_hint": "Select from list",
+                "toggle_field": {
+                  "name": "uniqueid",
+                  "label": "Unique ID",
+                  "hint": "Used in conjuction with \"Control ID\". Specifies whether a request can be submitted more than once without an error.When set to true, which is the default, a request cannot be repeated. The \"Control ID\" attribute of the <function> element will be checked to determine if the operation was previously executed and completed. When set to false, the system allows the operation to execute any number of times.",
+                  "toggle_hint": "Use custom value",
+                  "optional": true,
+                  "control_type": "text",
+                  "type": "string"
+                },
+                "optional": true,
+                "type": "number",
+                "name": "uniqueid"
+              },
+              {
+                "control_type": "select",
+                "label": "DTD version",
+                "hint": "Identifies the version of the API in use. The value of 3.0 (default) is strongly recommended as it provides access to both the generic functions and the object-specific functions.",
+                "pick_list": [
+                  [
+                    "3.0",
+                    "3.0"
+                  ],
+                  [
+                    "2.1",
+                    "2.1"
+                  ]
+                ],
+                "optional": true,
+                "type": "string",
+                "name": "dtdversion"
+              }
+            ],
+            "type": "object"
+          },
+          {
+            "control_type": "key_value",
+            "empty_list_text": "The header 'x-intacct-xml-request' is sent as 'Content-Type' by default.",
+            "empty_list_title": "Does this HTTP request require extra headers?",
+            "extends_schema": true,
+            "item_label": "Header",
+            "label": "Request headers",
+            "name": "request_headers",
+            "of": "object",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Key",
+                "optional": true,
+                "type": "string",
+                "name": "key"
+              },
+              {
+                "control_type": "text",
+                "label": "Value",
+                "optional": true,
+                "type": "string",
+                "name": "value"
+              }
+            ],
+            "sticky": false,
+            "type": "array"
+          },
+          {
+            "control_type": "schema-designer",
+            "extends_schema": true,
+            "label": "Response body",
+            "name": "output",
+            "optional": true,
+            "sample_data_type": "json_input",
+            "sticky": true,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "control_type": "schema-designer",
+            "extends_schema": true,
+            "label": "Response headers",
+            "name": "response_headers",
+            "optional": true,
+            "sample_data_type": "json_input",
+            "sticky": false,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "control_type": "select",
+            "default": "xml",
+            "extends_schema": true,
+            "label": "Response type",
+            "name": "response_type",
+            "optional": true,
+            "pick_list": [
+              [
+                "XML response",
+                "xml"
+              ],
+              [
+                "JSON response",
+                "json"
+              ],
+              [
+                "Raw response",
+                "raw"
+              ]
+            ],
+            "sticky": true,
+            "type": "string"
+          },
+          {
+            "control_type": "select",
+            "hint": "If <b>Yes</b>, the response returned with the failure status will be marked as an unsuccessful action, the error message is surfaced to the job report. If <b>No</b>, the response with failure status will be parsed and captured in the action output without raising any errors. This is useful for capturing the batch action (with multiple functions inside content tag) results.",
+            "label": "Mark failure status in response as error?",
+            "name": "surface_errors",
+            "optional": true,
+            "pick_list": [
+              [
+                "No",
+                "no"
+              ],
+              [
+                "Yes",
+                "yes"
+              ]
+            ],
+            "sticky": true,
+            "toggle_field": {
+              "name": "surface_errors",
+              "label": "Mark failure status in response as error?",
+              "hint": "If <b>yes</b>, the response returned with the failure status will be marked as an unsuccessful action, the error message is surfaced to the job report. If <b>no</b>, the response with failure status will be parsed and captured in the action output without raising any errors. This is useful for capturing the batch action (with multiple functions inside content tag) results.",
+              "toggle_hint": "Use custom value",
+              "sticky": true,
+              "control_type": "text",
+              "optional": true,
+              "type": "string"
+            },
+            "toggle_hint": "Select from list",
+            "type": "string"
+          },
+          {
+            "control_type": "text",
+            "hint": "If you are retrieving multiple locations using readByQuery, you can specify \"location\" as value. This mainly helps to parse the response XML and group the same tags as array. Provide comma-separated values for specifying multiple array tags.",
+            "label": "Array tags in XML response",
+            "name": "array_tags",
+            "optional": true,
+            "sticky": true,
+            "type": "string"
+          }
+        ],
+        "uuid": "12ace9b6-0ccd-47ad-be95-ae333e325825"
+      },
+      {
+        "number": 3,
+        "provider": "sage_intacct_custom__connector_908715_1678385876",
+        "name": "custom_action",
+        "as": "858f5aeb",
+        "title": null,
+        "description": "<span class=\"provider\">Custom action</span> in <span class=\"provider\">Sage Intacct (Custom)</span>",
+        "keyword": "action",
+        "input": {
+          "action_name": "Custom action",
+          "operation_element": {
+            "content_data": "<content>\n<function controlid=\"ae629532-aaba-483a-9ae9-11a4ff61be7c\">\n        <getDimensionRestrictedData>\n          <DimensionValue>\n            <dimension>Demo Custom Dimension\n</dimension>\n            <value>Womens Aux</value>\n          </DimensionValue>\n        </getDimensionRestrictedData>\n      </function>\n    </content>"
+          },
+          "response_type": "xml",
+          "array_tags": "dimension",
+          "output": "[{\"properties\":[{\"properties\":[{\"control_type\":\"text\",\"label\":\"Status\",\"type\":\"string\",\"name\":\"status\",\"details\":{\"real_name\":\"status\"}},{\"control_type\":\"text\",\"label\":\"Senderid\",\"type\":\"string\",\"name\":\"senderid\",\"details\":{\"real_name\":\"senderid\"}},{\"control_type\":\"text\",\"label\":\"Controlid\",\"type\":\"string\",\"name\":\"controlid\",\"details\":{\"real_name\":\"controlid\"}},{\"control_type\":\"text\",\"label\":\"Uniqueid\",\"type\":\"string\",\"name\":\"uniqueid\",\"details\":{\"real_name\":\"uniqueid\"}},{\"control_type\":\"text\",\"label\":\"Dtdversion\",\"type\":\"string\",\"name\":\"dtdversion\",\"details\":{\"real_name\":\"dtdversion\"}}],\"label\":\"Control\",\"type\":\"object\",\"name\":\"control\",\"details\":{\"real_name\":\"control\"}},{\"properties\":[{\"properties\":[{\"control_type\":\"text\",\"label\":\"Status\",\"type\":\"string\",\"name\":\"status\",\"details\":{\"real_name\":\"status\"}},{\"control_type\":\"text\",\"label\":\"Userid\",\"type\":\"string\",\"name\":\"userid\",\"details\":{\"real_name\":\"userid\"}},{\"control_type\":\"text\",\"label\":\"Companyid\",\"type\":\"string\",\"name\":\"companyid\",\"details\":{\"real_name\":\"companyid\"}},{\"control_type\":\"text\",\"label\":\"Locationid\",\"type\":\"string\",\"name\":\"locationid\",\"details\":{\"real_name\":\"locationid\"}},{\"control_type\":\"text\",\"label\":\"Sessiontimestamp\",\"render_input\":\"date_time_conversion\",\"parse_output\":\"date_time_conversion\",\"type\":\"date_time\",\"name\":\"sessiontimestamp\",\"details\":{\"real_name\":\"sessiontimestamp\"}},{\"control_type\":\"text\",\"label\":\"Sessiontimeout\",\"render_input\":\"date_time_conversion\",\"parse_output\":\"date_time_conversion\",\"type\":\"date_time\",\"name\":\"sessiontimeout\",\"details\":{\"real_name\":\"sessiontimeout\"}}],\"label\":\"Authentication\",\"type\":\"object\",\"name\":\"authentication\",\"details\":{\"real_name\":\"authentication\"}},{\"name\":\"result\",\"type\":\"array\",\"of\":\"object\",\"label\":\"Result\",\"properties\":[{\"control_type\":\"text\",\"label\":\"Status\",\"type\":\"string\",\"name\":\"status\",\"details\":{\"real_name\":\"status\"}},{\"control_type\":\"text\",\"label\":\"Function\",\"type\":\"string\",\"name\":\"function\",\"details\":{\"real_name\":\"function\"}},{\"control_type\":\"text\",\"label\":\"Controlid\",\"type\":\"string\",\"name\":\"controlid\",\"details\":{\"real_name\":\"controlid\"}},{\"properties\":[{\"properties\":[{\"name\":\"dimension\",\"type\":\"array\",\"of\":\"object\",\"label\":\"Dimension\",\"properties\":[{\"control_type\":\"text\",\"label\":\"Object name\",\"type\":\"string\",\"name\":\"objectName\",\"details\":{\"real_name\":\"objectName\"}},{\"control_type\":\"text\",\"label\":\"Object label\",\"type\":\"string\",\"name\":\"objectLabel\",\"details\":{\"real_name\":\"objectLabel\"}},{\"control_type\":\"text\",\"label\":\"Term label\",\"type\":\"string\",\"name\":\"termLabel\",\"details\":{\"real_name\":\"termLabel\"}},{\"control_type\":\"text\",\"label\":\"User defined dimension\",\"type\":\"string\",\"name\":\"userDefinedDimension\",\"details\":{\"real_name\":\"userDefinedDimension\"}},{\"control_type\":\"text\",\"label\":\"Enabled in GL\",\"type\":\"string\",\"name\":\"enabledInGL\",\"details\":{\"real_name\":\"enabledInGL\"}}],\"details\":{\"real_name\":\"dimension\"}}],\"label\":\"Dimensions\",\"type\":\"object\",\"name\":\"dimensions\",\"details\":{\"real_name\":\"dimensions\"}}],\"label\":\"Data\",\"type\":\"object\",\"name\":\"data\",\"details\":{\"real_name\":\"data\"}}],\"details\":{\"real_name\":\"result\"}}],\"label\":\"Operation\",\"type\":\"object\",\"name\":\"operation\",\"details\":{\"real_name\":\"operation\"}}],\"label\":\"Body\",\"type\":\"object\",\"name\":\"body\",\"details\":{\"real_name\":\"body\"}},{\"properties\":[{\"control_type\":\"text\",\"label\":\"Date\",\"render_input\":\"date_time_conversion\",\"parse_output\":\"date_time_conversion\",\"type\":\"date_time\",\"name\":\"date\",\"details\":{\"real_name\":\"date\"}},{\"control_type\":\"text\",\"label\":\"Content type\",\"type\":\"string\",\"name\":\"content_type\",\"details\":{\"real_name\":\"content_type\"}},{\"control_type\":\"text\",\"label\":\"Transfer encoding\",\"type\":\"string\",\"name\":\"transfer_encoding\",\"details\":{\"real_name\":\"transfer_encoding\"}},{\"control_type\":\"text\",\"label\":\"Connection\",\"type\":\"string\",\"name\":\"connection\",\"details\":{\"real_name\":\"connection\"}},{\"control_type\":\"text\",\"label\":\"Cache control\",\"type\":\"string\",\"name\":\"cache_control\",\"details\":{\"real_name\":\"cache_control\"}},{\"control_type\":\"text\",\"label\":\"X frame options\",\"type\":\"string\",\"name\":\"x_frame_options\",\"details\":{\"real_name\":\"x_frame_options\"}},{\"control_type\":\"text\",\"label\":\"X content type options\",\"type\":\"string\",\"name\":\"x_content_type_options\",\"details\":{\"real_name\":\"x_content_type_options\"}},{\"control_type\":\"text\",\"label\":\"X xss protection\",\"type\":\"string\",\"name\":\"x_xss_protection\",\"details\":{\"real_name\":\"x_xss_protection\"}},{\"control_type\":\"text\",\"label\":\"Strict transport security\",\"type\":\"string\",\"name\":\"strict_transport_security\",\"details\":{\"real_name\":\"strict_transport_security\"}},{\"control_type\":\"text\",\"label\":\"Content language\",\"type\":\"string\",\"name\":\"content_language\",\"details\":{\"real_name\":\"content_language\"}},{\"control_type\":\"text\",\"label\":\"Set cookie\",\"type\":\"string\",\"name\":\"set_cookie\",\"details\":{\"real_name\":\"set_cookie\"}},{\"control_type\":\"text\",\"label\":\"X ia th\",\"type\":\"string\",\"name\":\"x_ia_th\",\"details\":{\"real_name\":\"x_ia_th\"}},{\"control_type\":\"text\",\"label\":\"Content security policy report only\",\"type\":\"string\",\"name\":\"content_security_policy_report_only\",\"details\":{\"real_name\":\"content_security_policy_report_only\"}},{\"control_type\":\"text\",\"label\":\"P 3 p\",\"type\":\"string\",\"name\":\"p3p\",\"details\":{\"real_name\":\"p3p\"}},{\"control_type\":\"text\",\"label\":\"Vary\",\"type\":\"string\",\"name\":\"vary\",\"details\":{\"real_name\":\"vary\"}},{\"control_type\":\"text\",\"label\":\"Access control allow credentials\",\"type\":\"string\",\"name\":\"access_control_allow_credentials\",\"details\":{\"real_name\":\"access_control_allow_credentials\"}},{\"control_type\":\"text\",\"label\":\"Cf cache status\",\"type\":\"string\",\"name\":\"cf_cache_status\",\"details\":{\"real_name\":\"cf_cache_status\"}},{\"control_type\":\"text\",\"label\":\"Server\",\"type\":\"string\",\"name\":\"server\",\"details\":{\"real_name\":\"server\"}},{\"control_type\":\"text\",\"label\":\"Cf ray\",\"type\":\"string\",\"name\":\"cf_ray\",\"details\":{\"real_name\":\"cf_ray\"}}],\"label\":\"Headers\",\"type\":\"object\",\"name\":\"headers\",\"details\":{\"real_name\":\"headers\"}}]"
+        },
+        "extended_output_schema": [
+          {
+            "label": "Body",
+            "name": "body",
+            "optional": true,
+            "properties": [
+              {
+                "properties": [
+                  {
+                    "properties": [
+                      {
+                        "control_type": "text",
+                        "label": "Status",
+                        "details": {
+                          "real_name": "status"
+                        },
+                        "optional": true,
+                        "type": "string",
+                        "name": "status"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Senderid",
+                        "details": {
+                          "real_name": "senderid"
+                        },
+                        "optional": true,
+                        "type": "string",
+                        "name": "senderid"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Controlid",
+                        "details": {
+                          "real_name": "controlid"
+                        },
+                        "optional": true,
+                        "type": "string",
+                        "name": "controlid"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Uniqueid",
+                        "details": {
+                          "real_name": "uniqueid"
+                        },
+                        "optional": true,
+                        "type": "string",
+                        "name": "uniqueid"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Dtdversion",
+                        "details": {
+                          "real_name": "dtdversion"
+                        },
+                        "optional": true,
+                        "type": "string",
+                        "name": "dtdversion"
+                      }
+                    ],
+                    "label": "Control",
+                    "details": {
+                      "real_name": "control"
+                    },
+                    "optional": true,
+                    "type": "object",
+                    "name": "control"
+                  },
+                  {
+                    "properties": [
+                      {
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Status",
+                            "details": {
+                              "real_name": "status"
+                            },
+                            "optional": true,
+                            "type": "string",
+                            "name": "status"
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Userid",
+                            "details": {
+                              "real_name": "userid"
+                            },
+                            "optional": true,
+                            "type": "string",
+                            "name": "userid"
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Companyid",
+                            "details": {
+                              "real_name": "companyid"
+                            },
+                            "optional": true,
+                            "type": "string",
+                            "name": "companyid"
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Locationid",
+                            "details": {
+                              "real_name": "locationid"
+                            },
+                            "optional": true,
+                            "type": "string",
+                            "name": "locationid"
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Sessiontimestamp",
+                            "render_input": "date_time_conversion",
+                            "parse_output": "date_time_conversion",
+                            "details": {
+                              "real_name": "sessiontimestamp"
+                            },
+                            "optional": true,
+                            "type": "date_time",
+                            "name": "sessiontimestamp"
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Sessiontimeout",
+                            "render_input": "date_time_conversion",
+                            "parse_output": "date_time_conversion",
+                            "details": {
+                              "real_name": "sessiontimeout"
+                            },
+                            "optional": true,
+                            "type": "date_time",
+                            "name": "sessiontimeout"
+                          }
+                        ],
+                        "label": "Authentication",
+                        "details": {
+                          "real_name": "authentication"
+                        },
+                        "optional": true,
+                        "type": "object",
+                        "name": "authentication"
+                      },
+                      {
+                        "name": "result",
+                        "type": "array",
+                        "of": "object",
+                        "label": "Result",
+                        "details": {
+                          "real_name": "result"
+                        },
+                        "optional": true,
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Status",
+                            "details": {
+                              "real_name": "status"
+                            },
+                            "optional": true,
+                            "type": "string",
+                            "name": "status"
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Function",
+                            "details": {
+                              "real_name": "function"
+                            },
+                            "optional": true,
+                            "type": "string",
+                            "name": "function"
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Controlid",
+                            "details": {
+                              "real_name": "controlid"
+                            },
+                            "optional": true,
+                            "type": "string",
+                            "name": "controlid"
+                          },
+                          {
+                            "properties": [
+                              {
+                                "properties": [
+                                  {
+                                    "name": "dimension",
+                                    "type": "array",
+                                    "of": "object",
+                                    "label": "Dimension",
+                                    "details": {
+                                      "real_name": "dimension"
+                                    },
+                                    "optional": true,
+                                    "properties": [
+                                      {
+                                        "control_type": "text",
+                                        "label": "Object name",
+                                        "details": {
+                                          "real_name": "objectName"
+                                        },
+                                        "optional": true,
+                                        "type": "string",
+                                        "name": "objectName"
+                                      },
+                                      {
+                                        "control_type": "text",
+                                        "label": "Object label",
+                                        "details": {
+                                          "real_name": "objectLabel"
+                                        },
+                                        "optional": true,
+                                        "type": "string",
+                                        "name": "objectLabel"
+                                      },
+                                      {
+                                        "control_type": "text",
+                                        "label": "Term label",
+                                        "details": {
+                                          "real_name": "termLabel"
+                                        },
+                                        "optional": true,
+                                        "type": "string",
+                                        "name": "termLabel"
+                                      },
+                                      {
+                                        "control_type": "text",
+                                        "label": "User defined dimension",
+                                        "details": {
+                                          "real_name": "userDefinedDimension"
+                                        },
+                                        "optional": true,
+                                        "type": "string",
+                                        "name": "userDefinedDimension"
+                                      },
+                                      {
+                                        "control_type": "text",
+                                        "label": "Enabled in GL",
+                                        "details": {
+                                          "real_name": "enabledInGL"
+                                        },
+                                        "optional": true,
+                                        "type": "string",
+                                        "name": "enabledInGL"
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "label": "Dimensions",
+                                "details": {
+                                  "real_name": "dimensions"
+                                },
+                                "optional": true,
+                                "type": "object",
+                                "name": "dimensions"
+                              }
+                            ],
+                            "label": "Data",
+                            "details": {
+                              "real_name": "data"
+                            },
+                            "optional": true,
+                            "type": "object",
+                            "name": "data"
+                          }
+                        ]
+                      }
+                    ],
+                    "label": "Operation",
+                    "details": {
+                      "real_name": "operation"
+                    },
+                    "optional": true,
+                    "type": "object",
+                    "name": "operation"
+                  }
+                ],
+                "label": "Body",
+                "details": {
+                  "real_name": "body"
+                },
+                "optional": true,
+                "type": "object",
+                "name": "body"
+              },
+              {
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Date",
+                    "render_input": "date_time_conversion",
+                    "parse_output": "date_time_conversion",
+                    "details": {
+                      "real_name": "date"
+                    },
+                    "optional": true,
+                    "type": "date_time",
+                    "name": "date"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Content type",
+                    "details": {
+                      "real_name": "content_type"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "content_type"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Transfer encoding",
+                    "details": {
+                      "real_name": "transfer_encoding"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "transfer_encoding"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Connection",
+                    "details": {
+                      "real_name": "connection"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "connection"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Cache control",
+                    "details": {
+                      "real_name": "cache_control"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "cache_control"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "X frame options",
+                    "details": {
+                      "real_name": "x_frame_options"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "x_frame_options"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "X content type options",
+                    "details": {
+                      "real_name": "x_content_type_options"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "x_content_type_options"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "X xss protection",
+                    "details": {
+                      "real_name": "x_xss_protection"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "x_xss_protection"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Strict transport security",
+                    "details": {
+                      "real_name": "strict_transport_security"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "strict_transport_security"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Content language",
+                    "details": {
+                      "real_name": "content_language"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "content_language"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Set cookie",
+                    "details": {
+                      "real_name": "set_cookie"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "set_cookie"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "X ia th",
+                    "details": {
+                      "real_name": "x_ia_th"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "x_ia_th"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Content security policy report only",
+                    "details": {
+                      "real_name": "content_security_policy_report_only"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "content_security_policy_report_only"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "P 3 p",
+                    "details": {
+                      "real_name": "p3p"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "p3p"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Vary",
+                    "details": {
+                      "real_name": "vary"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "vary"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Access control allow credentials",
+                    "details": {
+                      "real_name": "access_control_allow_credentials"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "access_control_allow_credentials"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Cf cache status",
+                    "details": {
+                      "real_name": "cf_cache_status"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "cf_cache_status"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Server",
+                    "details": {
+                      "real_name": "server"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "server"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Cf ray",
+                    "details": {
+                      "real_name": "cf_ray"
+                    },
+                    "optional": true,
+                    "type": "string",
+                    "name": "cf_ray"
+                  }
+                ],
+                "label": "Headers",
+                "details": {
+                  "real_name": "headers"
+                },
+                "optional": true,
+                "type": "object",
+                "name": "headers"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "control_type": "text",
+            "default": "Custom action",
+            "extends_schema": true,
+            "hint": "Give this action you're building a descriptive name, e.g. Create customer, Get customer",
+            "label": "Action name",
+            "name": "action_name",
+            "optional": false,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "hint": "Provides the content for the request. <a href='https://developer.intacct.com/web-services/requests/#operation-element' target='_blank'>Learn more</a>",
+            "label": "Operation element of XML request",
+            "name": "operation_element",
+            "optional": false,
+            "properties": [
+              {
+                "control_type": "checkbox",
+                "label": "Transaction",
+                "parse_output": "float_conversion",
+                "hint": "Specifies whether all the functions in the operation block represent a single transaction. When set to Yes, all of the functions are treated as a single transaction. If one function fails, all previously executed functions within the operation are rolled back. This is useful for groups of functions that rely on each other to change information in the database. When set to No, which is the default, functions execute independently. If one function fails, others still proceed.",
+                "toggle_hint": "Select from list",
+                "toggle_field": {
+                  "name": "transaction",
+                  "label": "Transaction",
+                  "hint": "Specifies whether all the functions in the operation block represent a single transaction. When set to true, all of the functions are treated as a single transaction. If one function fails, all previously executed functions within the operation are rolled back. This is useful for groups of functions that rely on each other to change information in the database. When set to false, which is the default, functions execute independently. If one function fails, others still proceed.",
+                  "toggle_hint": "Use custom value",
+                  "optional": true,
+                  "control_type": "text",
+                  "type": "string"
+                },
+                "optional": true,
+                "type": "number",
+                "name": "transaction"
+              },
+              {
+                "control_type": "text-area",
+                "label": "Content part of XML request",
+                "hint": "Supplies one or more function elements to be executed.  Provide a valid XML with <b>&lt;content&gt;...&lt;/content&gt;</b> tag to send with the request. <a href='https://developer.intacct.com/web-services/requests/#content-element' target='_blank'>Learn more</a>",
+                "default": "<content>\n      <!-- Search call sample -->\n      <function controlid=\"UUID-1\">\n        <readByQuery>\n          <object>LOCATION</object>\n          <fields>*</fields>\n          <query></query>\n          <pagesize>2</pagesize>\n          <returnFormat>xml</returnFormat>\n        </readByQuery>\n      </function>\n\n      <!-- Create call sample -->\n      <!--\n      <function controlid=\"UUID-2\">\n        <create>\n           <LOCATION>\n             <LOCATIONID>23</LOCATIONID>\n             <NAME>HQ</NAME>\n           </LOCATION>\n        </create>\n      </function>\n      -->\n    </content>",
+                "optional": false,
+                "type": "string",
+                "name": "content_data"
+              }
+            ],
+            "type": "object"
+          },
+          {
+            "hint": "Control element includes your Web Services credentials and applies to the entire request. <a href='https://developer.intacct.com/web-services/requests/#control-element' target='_blank'>Learn more</a>",
+            "label": "Control element of XML request",
+            "name": "control_element",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Control ID",
+                "hint": "Control ID for request as a whole.",
+                "optional": true,
+                "type": "string",
+                "name": "controlid"
+              },
+              {
+                "control_type": "checkbox",
+                "label": "Unique ID",
+                "parse_output": "float_conversion",
+                "hint": "Used in conjuction with \"Control ID\". Specifies whether a request can be submitted more than once without an error.When set to Yes, which is the default, a request cannot be repeated. The \"Control ID\" attribute of the <function> element will be checked to determine if the operation was previously executed and completed. When set to No, the system allows the operation to execute any number of times.",
+                "toggle_hint": "Select from list",
+                "toggle_field": {
+                  "name": "uniqueid",
+                  "label": "Unique ID",
+                  "hint": "Used in conjuction with \"Control ID\". Specifies whether a request can be submitted more than once without an error.When set to true, which is the default, a request cannot be repeated. The \"Control ID\" attribute of the <function> element will be checked to determine if the operation was previously executed and completed. When set to false, the system allows the operation to execute any number of times.",
+                  "toggle_hint": "Use custom value",
+                  "optional": true,
+                  "control_type": "text",
+                  "type": "string"
+                },
+                "optional": true,
+                "type": "number",
+                "name": "uniqueid"
+              },
+              {
+                "control_type": "select",
+                "label": "DTD version",
+                "hint": "Identifies the version of the API in use. The value of 3.0 (default) is strongly recommended as it provides access to both the generic functions and the object-specific functions.",
+                "pick_list": [
+                  [
+                    "3.0",
+                    "3.0"
+                  ],
+                  [
+                    "2.1",
+                    "2.1"
+                  ]
+                ],
+                "optional": true,
+                "type": "string",
+                "name": "dtdversion"
+              }
+            ],
+            "type": "object"
+          },
+          {
+            "control_type": "key_value",
+            "empty_list_text": "The header 'x-intacct-xml-request' is sent as 'Content-Type' by default.",
+            "empty_list_title": "Does this HTTP request require extra headers?",
+            "extends_schema": true,
+            "item_label": "Header",
+            "label": "Request headers",
+            "name": "request_headers",
+            "of": "object",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Key",
+                "optional": true,
+                "type": "string",
+                "name": "key"
+              },
+              {
+                "control_type": "text",
+                "label": "Value",
+                "optional": true,
+                "type": "string",
+                "name": "value"
+              }
+            ],
+            "sticky": false,
+            "type": "array"
+          },
+          {
+            "control_type": "schema-designer",
+            "extends_schema": true,
+            "label": "Response body",
+            "name": "output",
+            "optional": true,
+            "sample_data_type": "json_input",
+            "sticky": true,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "control_type": "schema-designer",
+            "extends_schema": true,
+            "label": "Response headers",
+            "name": "response_headers",
+            "optional": true,
+            "sample_data_type": "json_input",
+            "sticky": false,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "control_type": "select",
+            "default": "xml",
+            "extends_schema": true,
+            "label": "Response type",
+            "name": "response_type",
+            "optional": true,
+            "pick_list": [
+              [
+                "XML response",
+                "xml"
+              ],
+              [
+                "JSON response",
+                "json"
+              ],
+              [
+                "Raw response",
+                "raw"
+              ]
+            ],
+            "sticky": true,
+            "type": "string"
+          },
+          {
+            "control_type": "select",
+            "hint": "If <b>Yes</b>, the response returned with the failure status will be marked as an unsuccessful action, the error message is surfaced to the job report. If <b>No</b>, the response with failure status will be parsed and captured in the action output without raising any errors. This is useful for capturing the batch action (with multiple functions inside content tag) results.",
+            "label": "Mark failure status in response as error?",
+            "name": "surface_errors",
+            "optional": true,
+            "pick_list": [
+              [
+                "No",
+                "no"
+              ],
+              [
+                "Yes",
+                "yes"
+              ]
+            ],
+            "sticky": true,
+            "toggle_field": {
+              "name": "surface_errors",
+              "label": "Mark failure status in response as error?",
+              "hint": "If <b>yes</b>, the response returned with the failure status will be marked as an unsuccessful action, the error message is surfaced to the job report. If <b>no</b>, the response with failure status will be parsed and captured in the action output without raising any errors. This is useful for capturing the batch action (with multiple functions inside content tag) results.",
+              "toggle_hint": "Use custom value",
+              "sticky": true,
+              "control_type": "text",
+              "optional": true,
+              "type": "string"
+            },
+            "toggle_hint": "Select from list",
+            "type": "string"
+          },
+          {
+            "control_type": "text",
+            "hint": "If you are retrieving multiple locations using readByQuery, you can specify \"location\" as value. This mainly helps to parse the response XML and group the same tags as array. Provide comma-separated values for specifying multiple array tags.",
+            "label": "Array tags in XML response",
+            "name": "array_tags",
+            "optional": true,
+            "sticky": true,
+            "type": "string"
+          }
+        ],
+        "uuid": "6a456c2d-1964-4c20-ba7c-42e53cf129c1"
+      },
+      {
+        "number": 4,
+        "provider": "logger",
+        "name": "log_message",
+        "as": "4959c11e",
+        "title": null,
+        "description": "Log <span class=\"provider\">message</span> to <span class=\"provider\">Job report</span>",
+        "keyword": "action",
+        "input": {
+          "user_logs_enabled": "false",
+          "message": "This is new logv#{_dp('{\"pill_type\":\"account_property\",\"property_name\":\"BM.AccessKey\"}')}"
+        },
+        "extended_input_schema": [
+          {
+            "control_type": "switch",
+            "default": false,
+            "disable_formula": true,
+            "extends_schema": true,
+            "hint": "                Send a copy of the message to Workato logs.\n                <a href=\"https://docs.workato.com/features/logging-service.html\" target=\"_blank\" class=\"ng-scope\">\n                  Learn more\n                </a>\n",
+            "label": "Send to Workato log service",
+            "name": "user_logs_enabled",
+            "optional": true,
+            "type": "string"
+          }
+        ],
+        "uuid": "2204cc49-a524-4389-aa64-1b8f19fbffbd"
+      },
+      {
+        "number": 5,
+        "provider": "workato_recipe_function",
+        "name": "return_result",
+        "as": "712e11f8",
+        "title": null,
+        "description": null,
+        "keyword": "action",
+        "input": {
+        },
+        "uuid": "61dcb3d3-a46b-40b0-b199-e2dce93ab631"
+      }
+    ],
+    "job_report_schema": [
+      {
+        "name": "custom_column_0",
+        "label": "Status"
+      },
+      {
+        "name": "custom_column_1",
+        "label": "SenderID"
+      }
+    ],
+    "job_report_config": {
+      "custom_column_0": "#{_('data.sage_intacct_custom__connector_908715_1678385876.858f5aeb.body.body.control.status')}",
+      "custom_column_1": "#{_('data.sage_intacct_custom__connector_908715_1678385876.858f5aeb.body.body.control.senderid')}"
+    },
+    "uuid": "293bbd60-896d-42bd-9cef-ece68876b941",
+    "unfinished": false
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "workato_recipe_function",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "sage_intacct_custom__connector_908715_1678385876",
+      "account_id": null,
+      "skip_validation": false
+    },
+    {
+      "keyword": "application",
+      "provider": "logger",
+      "skip_validation": false,
+      "account_id": null
+    }
+  ]
+}

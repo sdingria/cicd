@@ -1,0 +1,8 @@
+{
+  "title": "Sage Intacct (Custom)",
+  "description": "[Sage Intacct](https://www.sageintacct.com/) is a provider of cloud-based accounting software. Sage Intacct's applications are suitable for small and midsize companies and can provide real-time financial and operational insights as well as the ability to automate critical processes.\n\n## What can you do with this connector\n1. Read and update the custom-fields of Customer, Vendor, Item, PO, SO documents in Sage Intacct when a corresponding record gets updated on Salesforce.\n2. Create an employee with custom-fields in Sage Intacct when a worker gets created in Workday.\n3. Post Journal entries with custom-fields in Sage Intacct once Opportunity closes in Salesforce.\n\n## How can you get support?\nThis connector was built and is supported by Workato. Send all your bug reports or enhancement requests through our support channels found [here](https://support.workato.com/support/tickets/new) or get support via intercom at the bottom right of your screen. Let our support team know the name of this connector and that it was installed from the community for them to properly route your support tickets.",
+  "logo_file_name": "Sage_Intactt.jpg",
+  "logo_content_type": "image/jpeg",
+  "version_no": 1,
+  "note": "Installed from community"
+}
