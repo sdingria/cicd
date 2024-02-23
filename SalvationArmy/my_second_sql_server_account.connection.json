@@ -1,0 +1,6 @@
+{
+  "name": "My second SQL Server account",
+  "provider": "mssql",
+  "secure_gateway_tunnel_name": null,
+  "root_folder": false
+}

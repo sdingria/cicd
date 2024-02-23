@@ -1,0 +1,10 @@
+{
+  "name": "Sharat",
+  "provider": {
+    "zip_name": "sage_intacct_custom.custom_adapter.json",
+    "name": "Sage Intacct (Custom)",
+    "folder": ""
+  },
+  "secure_gateway_tunnel_name": null,
+  "root_folder": false
+}

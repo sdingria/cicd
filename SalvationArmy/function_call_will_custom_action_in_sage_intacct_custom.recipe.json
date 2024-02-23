@@ -1,0 +1,1403 @@
+{
+  "name": "Function call will custom action in Sage Intacct (Custom)",
+  "description": "When there is a function call, do action and other actions",
+  "version": 47,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "provider": "workato_recipe_function",
+    "name": "execute",
+    "as": "596c02e0",
+    "title": null,
+    "description": null,
+    "keyword": "trigger",
+    "input": {
+    },
+    "block": [
+      {
+        "number": 1,
+        "provider": "lookup_table",
+        "name": "search_entries",
+        "as": "f298f976",
+        "title": null,
+        "description": "\n      Search\n      <span class=\"provider\">entries</span>\n      in\n      <span class=\"provider\">CityLookupTable</span>\n      lookup table\n    ",
+        "keyword": "action",
+        "dynamicPickListSelection": {
+          "lookup_table_id": "CityLookupTable"
+        },
+        "input": {
+          "lookup_table_id": {
+            "zip_name": "citylookuptable.lookup_table.json",
+            "name": "CityLookupTable",
+            "folder": ""
+          }
+        },
+        "extended_output_schema": [
+          {
+            "label": "Entries",
+            "name": "entries",
+            "of": "object",
+            "properties": [
+              {
+                "control_type": "number",
+                "label": "Entry ID",
+                "parse_output": "integer_conversion",
+                "type": "integer",
+                "name": "id"
+              },
+              {
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "City Name",
+                    "name": "col1",
+                    "type": "string",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "City Code",
+                    "name": "col2",
+                    "type": "string",
+                    "sticky": true
+                  }
+                ],
+                "label": "Entry",
+                "type": "object",
+                "name": "entry"
+              }
+            ],
+            "type": "array"
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "hint": "Provide one or more entry fields to search the entry",
+            "label": "Search by",
+            "name": "parameters",
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "City Name",
+                "name": "col1",
+                "type": "string",
+                "sticky": true,
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "City Code",
+                "name": "col2",
+                "type": "string",
+                "sticky": true,
+                "optional": true
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "uuid": "e817df18-c3a0-4323-aed9-360c67856a8c"
+      },
+      {
+        "number": 2,
+        "provider": "workato_variable",
+        "name": "declare_variable",
+        "as": "d0d7bf6e",
+        "title": "  Create variable ee",
+        "description": "Create variable <span class=\"provider\">ee</span>",
+        "keyword": "action",
+        "input": {
+          "variables": {
+            "schema": "[{\"name\":\"ee\",\"type\":\"string\",\"optional\":true,\"label\":\"ee\",\"details\":{\"real_name\":\"ee\"},\"control_type\":\"text\"}]",
+            "data": {
+              "ee": "#{_dp('{\"pill_type\":\"account_property\",\"property_name\":\"SA.newProp1\"}')}"
+            }
+          }
+        },
+        "extended_output_schema": [
+          {
+            "control_type": "text",
+            "label": "ee",
+            "name": "ee",
+            "optional": true,
+            "type": "string",
+            "details": {
+              "real_name": "ee"
+            }
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "add_field_label": "Add a variable",
+            "control_type": "form-schema-builder",
+            "empty_schema_title": "Add variables by giving them a name, type and default value",
+            "exclude_fields": [
+              "hint"
+            ],
+            "item_label": "variable",
+            "label": "Variables",
+            "mark_as_required": true,
+            "name": "variables",
+            "ngIf": "!input.name",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Schema",
+                "extends_schema": true,
+                "broadcast_change_event": true,
+                "type": "string",
+                "name": "schema"
+              },
+              {
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "ee",
+                    "name": "ee",
+                    "type": "string",
+                    "optional": true,
+                    "details": {
+                      "real_name": "ee"
+                    },
+                    "hint": "Defaults to nil if not supplied.",
+                    "sticky": true
+                  }
+                ],
+                "label": "Data",
+                "type": "object",
+                "name": "data"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "visible_config_fields": [
+          "variables.data.ee"
+        ],
+        "uuid": "2bfa9bb2-30ab-4e41-aaa8-0c8ef596c13e"
+      },
+      {
+        "number": 3,
+        "as": "c1c8827b",
+        "keyword": "stop",
+        "input": {
+          "stop_with_error": "false"
+        },
+        "uuid": "9ae83672-738a-4893-b22b-ed996cddeeea"
+      },
+      {
+        "number": 4,
+        "provider": "workato_template",
+        "name": "create_document",
+        "as": "382e1e2e",
+        "title": null,
+        "description": "Create <span class=\"provider\">message</span> using <span class=\"provider\">MT-001 | Other Receipt Request XML Template</span> template",
+        "keyword": "action",
+        "dynamicPickListSelection": {
+          "template_id": "MT-001 | Other Receipt Request XML Template"
+        },
+        "input": {
+          "template_id": "47246"
+        },
+        "extended_input_schema": [
+          {
+            "label": "Template input",
+            "name": "template_input",
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Control ID",
+                "name": "controlID",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Paymentdateyear",
+                "name": "paymentdateyear",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Paymentdatemonth",
+                "name": "paymentdatemonth",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Paymentdateday",
+                "name": "paymentdateday",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Payee",
+                "name": "payee",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Receiveddateyear",
+                "name": "receiveddateyear",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Receiveddatemonth",
+                "name": "receiveddatemonth",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Receiveddateday",
+                "name": "receiveddateday",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Paymentmethod",
+                "name": "paymentmethod",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Bankaccountid",
+                "name": "bankaccountid",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Depositdateyear",
+                "name": "depositdateyear",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Depositdatemonth",
+                "name": "depositdatemonth",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Depositdateday",
+                "name": "depositdateday",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "name": "lineitems",
+                "type": "array",
+                "of": "object",
+                "label": "Lineitems",
+                "optional": false,
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Glaccountno",
+                    "name": "glaccountno",
+                    "type": "string",
+                    "optional": false
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Amount",
+                    "name": "amount",
+                    "type": "string",
+                    "optional": false
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Locationid",
+                    "name": "locationid",
+                    "type": "string",
+                    "optional": false
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Departmentid",
+                    "name": "departmentid",
+                    "type": "string",
+                    "optional": false
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "GLDIM restriction",
+                    "name": "GLDIMRestriction",
+                    "type": "string",
+                    "optional": false
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Classid",
+                    "name": "classid",
+                    "type": "string",
+                    "optional": false
+                  }
+                ]
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "uuid": "418f2904-7c90-494c-a43e-63ec82bd846d",
+        "skip": true
+      },
+      {
+        "number": 5,
+        "provider": "sage_intacct_custom__connector_908715_1704571680",
+        "name": "custom_action",
+        "as": "8fe88aba",
+        "title": null,
+        "description": "<span class=\"provider\">get UDD object</span> in <span class=\"provider\">Sage Intacct (Custom)</span>",
+        "keyword": "action",
+        "input": {
+          "action_name": "get UDD object",
+          "operation_element": {
+            "content_data": " <content>\n      <function controlid=\"uuid-2342\">\n        <query>\n          <object>Demo Custom Dimension 1</object>\n       <select>\n            <field>name</field>\n            </select>\n        </query>\n      </function>\n    </content>"
+          },
+          "response_type": "xml",
+          "array_tags": "Demo Custom Dimension 1"
+        },
+        "extended_output_schema": [
+          {
+            "label": "Body",
+            "name": "body",
+            "optional": true,
+            "properties": [
+
+            ],
+            "type": "object"
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "control_type": "text",
+            "default": "Custom action",
+            "extends_schema": true,
+            "hint": "Give this action you're building a descriptive name, e.g. Create customer, Get customer",
+            "label": "Action name",
+            "name": "action_name",
+            "optional": false,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "hint": "Provides the content for the request. <a href='https://developer.intacct.com/web-services/requests/#operation-element' target='_blank'>Learn more</a>",
+            "label": "Operation element of XML request",
+            "name": "operation_element",
+            "optional": false,
+            "properties": [
+              {
+                "control_type": "checkbox",
+                "label": "Transaction",
+                "parse_output": "float_conversion",
+                "hint": "Specifies whether all the functions in the operation block represent a single transaction. When set to Yes, all of the functions are treated as a single transaction. If one function fails, all previously executed functions within the operation are rolled back. This is useful for groups of functions that rely on each other to change information in the database. When set to No, which is the default, functions execute independently. If one function fails, others still proceed.",
+                "toggle_hint": "Select from list",
+                "toggle_field": {
+                  "name": "transaction",
+                  "label": "Transaction",
+                  "hint": "Specifies whether all the functions in the operation block represent a single transaction. When set to true, all of the functions are treated as a single transaction. If one function fails, all previously executed functions within the operation are rolled back. This is useful for groups of functions that rely on each other to change information in the database. When set to false, which is the default, functions execute independently. If one function fails, others still proceed.",
+                  "toggle_hint": "Use custom value",
+                  "optional": true,
+                  "control_type": "text",
+                  "type": "string"
+                },
+                "optional": true,
+                "type": "number",
+                "name": "transaction"
+              },
+              {
+                "control_type": "text-area",
+                "label": "Content part of XML request",
+                "hint": "Supplies one or more function elements to be executed.  Provide a valid XML with <b>&lt;content&gt;...&lt;/content&gt;</b> tag to send with the request. <a href='https://developer.intacct.com/web-services/requests/#content-element' target='_blank'>Learn more</a>",
+                "default": "<content>\n      <!-- Search call sample -->\n      <function controlid=\"UUID-1\">\n        <readByQuery>\n          <object>LOCATION</object>\n          <fields>*</fields>\n          <query></query>\n          <pagesize>2</pagesize>\n          <returnFormat>xml</returnFormat>\n        </readByQuery>\n      </function>\n\n      <!-- Create call sample -->\n      <!--\n      <function controlid=\"UUID-2\">\n        <create>\n           <LOCATION>\n             <LOCATIONID>23</LOCATIONID>\n             <NAME>HQ</NAME>\n           </LOCATION>\n        </create>\n      </function>\n      -->\n    </content>",
+                "optional": false,
+                "type": "string",
+                "name": "content_data"
+              }
+            ],
+            "type": "object"
+          },
+          {
+            "hint": "Control element includes your Web Services credentials and applies to the entire request. <a href='https://developer.intacct.com/web-services/requests/#control-element' target='_blank'>Learn more</a>",
+            "label": "Control element of XML request",
+            "name": "control_element",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Control ID",
+                "hint": "Control ID for request as a whole.",
+                "optional": true,
+                "type": "string",
+                "name": "controlid"
+              },
+              {
+                "control_type": "checkbox",
+                "label": "Unique ID",
+                "parse_output": "float_conversion",
+                "hint": "Used in conjuction with \"Control ID\". Specifies whether a request can be submitted more than once without an error.When set to Yes, which is the default, a request cannot be repeated. The \"Control ID\" attribute of the <function> element will be checked to determine if the operation was previously executed and completed. When set to No, the system allows the operation to execute any number of times.",
+                "toggle_hint": "Select from list",
+                "toggle_field": {
+                  "name": "uniqueid",
+                  "label": "Unique ID",
+                  "hint": "Used in conjuction with \"Control ID\". Specifies whether a request can be submitted more than once without an error.When set to true, which is the default, a request cannot be repeated. The \"Control ID\" attribute of the <function> element will be checked to determine if the operation was previously executed and completed. When set to false, the system allows the operation to execute any number of times.",
+                  "toggle_hint": "Use custom value",
+                  "optional": true,
+                  "control_type": "text",
+                  "type": "string"
+                },
+                "optional": true,
+                "type": "number",
+                "name": "uniqueid"
+              },
+              {
+                "control_type": "select",
+                "label": "DTD version",
+                "hint": "Identifies the version of the API in use. The value of 3.0 (default) is strongly recommended as it provides access to both the generic functions and the object-specific functions.",
+                "pick_list": [
+                  [
+                    "3.0",
+                    "3.0"
+                  ],
+                  [
+                    "2.1",
+                    "2.1"
+                  ]
+                ],
+                "optional": true,
+                "type": "string",
+                "name": "dtdversion"
+              }
+            ],
+            "type": "object"
+          },
+          {
+            "control_type": "key_value",
+            "empty_list_text": "The header 'x-intacct-xml-request' is sent as 'Content-Type' by default.",
+            "empty_list_title": "Does this HTTP request require extra headers?",
+            "extends_schema": true,
+            "item_label": "Header",
+            "label": "Request headers",
+            "name": "request_headers",
+            "of": "object",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Key",
+                "optional": true,
+                "type": "string",
+                "name": "key"
+              },
+              {
+                "control_type": "text",
+                "label": "Value",
+                "optional": true,
+                "type": "string",
+                "name": "value"
+              }
+            ],
+            "sticky": false,
+            "type": "array"
+          },
+          {
+            "control_type": "schema-designer",
+            "extends_schema": true,
+            "label": "Response body",
+            "name": "output",
+            "optional": true,
+            "sample_data_type": "json_input",
+            "sticky": true,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "control_type": "schema-designer",
+            "extends_schema": true,
+            "label": "Response headers",
+            "name": "response_headers",
+            "optional": true,
+            "sample_data_type": "json_input",
+            "sticky": false,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "control_type": "select",
+            "default": "xml",
+            "extends_schema": true,
+            "label": "Response type",
+            "name": "response_type",
+            "optional": true,
+            "pick_list": [
+              [
+                "XML response",
+                "xml"
+              ],
+              [
+                "JSON response",
+                "json"
+              ],
+              [
+                "Raw response",
+                "raw"
+              ]
+            ],
+            "sticky": true,
+            "type": "string"
+          },
+          {
+            "control_type": "select",
+            "hint": "If <b>Yes</b>, the response returned with the failure status will be marked as an unsuccessful action, the error message is surfaced to the job report. If <b>No</b>, the response with failure status will be parsed and captured in the action output without raising any errors. This is useful for capturing the batch action (with multiple functions inside content tag) results.",
+            "label": "Mark failure status in response as error?",
+            "name": "surface_errors",
+            "optional": true,
+            "pick_list": [
+              [
+                "No",
+                "no"
+              ],
+              [
+                "Yes",
+                "yes"
+              ]
+            ],
+            "sticky": true,
+            "toggle_field": {
+              "name": "surface_errors",
+              "label": "Mark failure status in response as error?",
+              "hint": "If <b>yes</b>, the response returned with the failure status will be marked as an unsuccessful action, the error message is surfaced to the job report. If <b>no</b>, the response with failure status will be parsed and captured in the action output without raising any errors. This is useful for capturing the batch action (with multiple functions inside content tag) results.",
+              "toggle_hint": "Use custom value",
+              "sticky": true,
+              "control_type": "text",
+              "optional": true,
+              "type": "string"
+            },
+            "toggle_hint": "Select from list",
+            "type": "string"
+          },
+          {
+            "control_type": "text",
+            "hint": "If you are retrieving multiple locations using readByQuery, you can specify \"location\" as value. This mainly helps to parse the response XML and group the same tags as array. Provide comma-separated values for specifying multiple array tags.",
+            "label": "Array tags in XML response",
+            "name": "array_tags",
+            "optional": true,
+            "sticky": true,
+            "type": "string"
+          }
+        ],
+        "uuid": "c8206962-b663-4db3-b76d-49533f66a689",
+        "skip": true
+      },
+      {
+        "number": 6,
+        "provider": "sage_intacct_custom__connector_908715_1704571680",
+        "name": "custom_action",
+        "as": "37475108",
+        "title": null,
+        "description": "<span class=\"provider\">Create Other Receipt</span> in <span class=\"provider\">Sage Intacct (Custom)</span>",
+        "keyword": "action",
+        "input": {
+          "action_name": "Create Other Receipt",
+          "operation_element": {
+            "content_data": " <content>\n      <function controlid=\"dasdwe903\">\n        <record_otherreceipt>\n          <paymentdate>\n            <year>2024</year>\n            <month>01</month>\n            <day>9</day>\n          </paymentdate>\n          <payee>Costco</payee>\n          <receiveddate>\n            <year>2024</year>\n            <month>01</month>\n            <day>26</day>\n          </receiveddate>\n          <paymentmethod>EFT</paymentmethod>\n          <bankaccountid>2323</bankaccountid>\n          <depositdate>\n            <year>2024</year>\n            <month>01</month>\n            <day>26</day>\n          </depositdate>\n          <description/>\n          <receiptitems>\n            <lineitem>\n              <glaccountno>1140</glaccountno>\n              <amount>50.99</amount>\n              <memo/>\n              <locationid>23</locationid>\n              <departmentid>30</departmentid>\n               <customfields>\n            <customfield>\n            <customfieldname>GLDIMDemo_Custom_Dimension_1</customfieldname>    \n            <customfieldvalue>10062</customfieldvalue>    \n            </customfield>\n            <customfield>\n            <customfieldname>CUSTOMERID</customfieldname>    \n            <customfieldvalue>0011Q000024uZ2xQAE</customfieldvalue>    \n            </customfield>\n            <customfield>\n            <customfieldname>ITEMID</customfieldname>    \n            <customfieldvalue>0093</customfieldvalue>    \n            </customfield>\n          </customfields>  \n            </lineitem>\n          </receiptitems>\n        </record_otherreceipt>\n      </function>\n    </content>"
+          },
+          "response_type": "xml"
+        },
+        "extended_output_schema": [
+          {
+            "label": "Body",
+            "name": "body",
+            "optional": true,
+            "properties": [
+
+            ],
+            "type": "object"
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "control_type": "text",
+            "default": "Custom action",
+            "extends_schema": true,
+            "hint": "Give this action you're building a descriptive name, e.g. Create customer, Get customer",
+            "label": "Action name",
+            "name": "action_name",
+            "optional": false,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "hint": "Provides the content for the request. <a href='https://developer.intacct.com/web-services/requests/#operation-element' target='_blank'>Learn more</a>",
+            "label": "Operation element of XML request",
+            "name": "operation_element",
+            "optional": false,
+            "properties": [
+              {
+                "control_type": "checkbox",
+                "label": "Transaction",
+                "parse_output": "float_conversion",
+                "hint": "Specifies whether all the functions in the operation block represent a single transaction. When set to Yes, all of the functions are treated as a single transaction. If one function fails, all previously executed functions within the operation are rolled back. This is useful for groups of functions that rely on each other to change information in the database. When set to No, which is the default, functions execute independently. If one function fails, others still proceed.",
+                "toggle_hint": "Select from list",
+                "toggle_field": {
+                  "name": "transaction",
+                  "label": "Transaction",
+                  "hint": "Specifies whether all the functions in the operation block represent a single transaction. When set to true, all of the functions are treated as a single transaction. If one function fails, all previously executed functions within the operation are rolled back. This is useful for groups of functions that rely on each other to change information in the database. When set to false, which is the default, functions execute independently. If one function fails, others still proceed.",
+                  "toggle_hint": "Use custom value",
+                  "optional": true,
+                  "control_type": "text",
+                  "type": "string"
+                },
+                "optional": true,
+                "type": "number",
+                "name": "transaction"
+              },
+              {
+                "control_type": "text-area",
+                "label": "Content part of XML request",
+                "hint": "Supplies one or more function elements to be executed.  Provide a valid XML with <b>&lt;content&gt;...&lt;/content&gt;</b> tag to send with the request. <a href='https://developer.intacct.com/web-services/requests/#content-element' target='_blank'>Learn more</a>",
+                "default": "<content>\n      <!-- Search call sample -->\n      <function controlid=\"UUID-1\">\n        <readByQuery>\n          <object>LOCATION</object>\n          <fields>*</fields>\n          <query></query>\n          <pagesize>2</pagesize>\n          <returnFormat>xml</returnFormat>\n        </readByQuery>\n      </function>\n\n      <!-- Create call sample -->\n      <!--\n      <function controlid=\"UUID-2\">\n        <create>\n           <LOCATION>\n             <LOCATIONID>23</LOCATIONID>\n             <NAME>HQ</NAME>\n           </LOCATION>\n        </create>\n      </function>\n      -->\n    </content>",
+                "optional": false,
+                "type": "string",
+                "name": "content_data"
+              }
+            ],
+            "type": "object"
+          },
+          {
+            "hint": "Control element includes your Web Services credentials and applies to the entire request. <a href='https://developer.intacct.com/web-services/requests/#control-element' target='_blank'>Learn more</a>",
+            "label": "Control element of XML request",
+            "name": "control_element",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Control ID",
+                "hint": "Control ID for request as a whole.",
+                "optional": true,
+                "type": "string",
+                "name": "controlid"
+              },
+              {
+                "control_type": "checkbox",
+                "label": "Unique ID",
+                "parse_output": "float_conversion",
+                "hint": "Used in conjuction with \"Control ID\". Specifies whether a request can be submitted more than once without an error.When set to Yes, which is the default, a request cannot be repeated. The \"Control ID\" attribute of the <function> element will be checked to determine if the operation was previously executed and completed. When set to No, the system allows the operation to execute any number of times.",
+                "toggle_hint": "Select from list",
+                "toggle_field": {
+                  "name": "uniqueid",
+                  "label": "Unique ID",
+                  "hint": "Used in conjuction with \"Control ID\". Specifies whether a request can be submitted more than once without an error.When set to true, which is the default, a request cannot be repeated. The \"Control ID\" attribute of the <function> element will be checked to determine if the operation was previously executed and completed. When set to false, the system allows the operation to execute any number of times.",
+                  "toggle_hint": "Use custom value",
+                  "optional": true,
+                  "control_type": "text",
+                  "type": "string"
+                },
+                "optional": true,
+                "type": "number",
+                "name": "uniqueid"
+              },
+              {
+                "control_type": "select",
+                "label": "DTD version",
+                "hint": "Identifies the version of the API in use. The value of 3.0 (default) is strongly recommended as it provides access to both the generic functions and the object-specific functions.",
+                "pick_list": [
+                  [
+                    "3.0",
+                    "3.0"
+                  ],
+                  [
+                    "2.1",
+                    "2.1"
+                  ]
+                ],
+                "optional": true,
+                "type": "string",
+                "name": "dtdversion"
+              }
+            ],
+            "type": "object"
+          },
+          {
+            "control_type": "key_value",
+            "empty_list_text": "The header 'x-intacct-xml-request' is sent as 'Content-Type' by default.",
+            "empty_list_title": "Does this HTTP request require extra headers?",
+            "extends_schema": true,
+            "item_label": "Header",
+            "label": "Request headers",
+            "name": "request_headers",
+            "of": "object",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Key",
+                "optional": true,
+                "type": "string",
+                "name": "key"
+              },
+              {
+                "control_type": "text",
+                "label": "Value",
+                "optional": true,
+                "type": "string",
+                "name": "value"
+              }
+            ],
+            "sticky": false,
+            "type": "array"
+          },
+          {
+            "control_type": "schema-designer",
+            "extends_schema": true,
+            "label": "Response body",
+            "name": "output",
+            "optional": true,
+            "sample_data_type": "json_input",
+            "sticky": true,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "control_type": "schema-designer",
+            "extends_schema": true,
+            "label": "Response headers",
+            "name": "response_headers",
+            "optional": true,
+            "sample_data_type": "json_input",
+            "sticky": false,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "control_type": "select",
+            "default": "xml",
+            "extends_schema": true,
+            "label": "Response type",
+            "name": "response_type",
+            "optional": true,
+            "pick_list": [
+              [
+                "XML response",
+                "xml"
+              ],
+              [
+                "JSON response",
+                "json"
+              ],
+              [
+                "Raw response",
+                "raw"
+              ]
+            ],
+            "sticky": true,
+            "type": "string"
+          },
+          {
+            "control_type": "select",
+            "hint": "If <b>Yes</b>, the response returned with the failure status will be marked as an unsuccessful action, the error message is surfaced to the job report. If <b>No</b>, the response with failure status will be parsed and captured in the action output without raising any errors. This is useful for capturing the batch action (with multiple functions inside content tag) results.",
+            "label": "Mark failure status in response as error?",
+            "name": "surface_errors",
+            "optional": true,
+            "pick_list": [
+              [
+                "No",
+                "no"
+              ],
+              [
+                "Yes",
+                "yes"
+              ]
+            ],
+            "sticky": true,
+            "toggle_field": {
+              "name": "surface_errors",
+              "label": "Mark failure status in response as error?",
+              "hint": "If <b>yes</b>, the response returned with the failure status will be marked as an unsuccessful action, the error message is surfaced to the job report. If <b>no</b>, the response with failure status will be parsed and captured in the action output without raising any errors. This is useful for capturing the batch action (with multiple functions inside content tag) results.",
+              "toggle_hint": "Use custom value",
+              "sticky": true,
+              "control_type": "text",
+              "optional": true,
+              "type": "string"
+            },
+            "toggle_hint": "Select from list",
+            "type": "string"
+          },
+          {
+            "control_type": "text",
+            "hint": "If you are retrieving multiple locations using readByQuery, you can specify \"location\" as value. This mainly helps to parse the response XML and group the same tags as array. Provide comma-separated values for specifying multiple array tags.",
+            "label": "Array tags in XML response",
+            "name": "array_tags",
+            "optional": true,
+            "sticky": true,
+            "type": "string"
+          }
+        ],
+        "uuid": "b99016f4-c83d-4490-b07a-776c4939e294"
+      },
+      {
+        "number": 7,
+        "provider": "sage_intacct_custom__connector_908715_1704571680",
+        "name": "custom_action",
+        "as": "6398cbdc",
+        "title": null,
+        "description": "<span class=\"provider\">get all dimensions</span> in <span class=\"provider\">Sage Intacct (Custom)</span>",
+        "keyword": "action",
+        "toggleCfg": {
+          "surface_errors": true
+        },
+        "input": {
+          "action_name": "get all dimensions",
+          "operation_element": {
+            "content_data": "<content>\n      <function controlid=\"uuid-234\">\n        <getDimensions/>\n      </function>\n    </content>"
+          },
+          "response_type": "xml",
+          "surface_errors": "no",
+          "output": "[]",
+          "array_tags": "dimension"
+        },
+        "extended_output_schema": [
+          {
+            "label": "Body",
+            "name": "body",
+            "optional": true,
+            "properties": [
+
+            ],
+            "type": "object"
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "control_type": "text",
+            "default": "Custom action",
+            "extends_schema": true,
+            "hint": "Give this action you're building a descriptive name, e.g. Create customer, Get customer",
+            "label": "Action name",
+            "name": "action_name",
+            "optional": false,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "hint": "Provides the content for the request. <a href='https://developer.intacct.com/web-services/requests/#operation-element' target='_blank'>Learn more</a>",
+            "label": "Operation element of XML request",
+            "name": "operation_element",
+            "optional": false,
+            "properties": [
+              {
+                "control_type": "checkbox",
+                "label": "Transaction",
+                "parse_output": "float_conversion",
+                "hint": "Specifies whether all the functions in the operation block represent a single transaction. When set to Yes, all of the functions are treated as a single transaction. If one function fails, all previously executed functions within the operation are rolled back. This is useful for groups of functions that rely on each other to change information in the database. When set to No, which is the default, functions execute independently. If one function fails, others still proceed.",
+                "toggle_hint": "Select from list",
+                "toggle_field": {
+                  "name": "transaction",
+                  "label": "Transaction",
+                  "hint": "Specifies whether all the functions in the operation block represent a single transaction. When set to true, all of the functions are treated as a single transaction. If one function fails, all previously executed functions within the operation are rolled back. This is useful for groups of functions that rely on each other to change information in the database. When set to false, which is the default, functions execute independently. If one function fails, others still proceed.",
+                  "toggle_hint": "Use custom value",
+                  "optional": true,
+                  "control_type": "text",
+                  "type": "string"
+                },
+                "optional": true,
+                "type": "number",
+                "name": "transaction"
+              },
+              {
+                "control_type": "text-area",
+                "label": "Content part of XML request",
+                "hint": "Supplies one or more function elements to be executed.  Provide a valid XML with <b>&lt;content&gt;...&lt;/content&gt;</b> tag to send with the request. <a href='https://developer.intacct.com/web-services/requests/#content-element' target='_blank'>Learn more</a>",
+                "default": "<content>\n      <!-- Search call sample -->\n      <function controlid=\"UUID-1\">\n        <readByQuery>\n          <object>LOCATION</object>\n          <fields>*</fields>\n          <query></query>\n          <pagesize>2</pagesize>\n          <returnFormat>xml</returnFormat>\n        </readByQuery>\n      </function>\n\n      <!-- Create call sample -->\n      <!--\n      <function controlid=\"UUID-2\">\n        <create>\n           <LOCATION>\n             <LOCATIONID>23</LOCATIONID>\n             <NAME>HQ</NAME>\n           </LOCATION>\n        </create>\n      </function>\n      -->\n    </content>",
+                "optional": false,
+                "type": "string",
+                "name": "content_data"
+              }
+            ],
+            "type": "object"
+          },
+          {
+            "hint": "Control element includes your Web Services credentials and applies to the entire request. <a href='https://developer.intacct.com/web-services/requests/#control-element' target='_blank'>Learn more</a>",
+            "label": "Control element of XML request",
+            "name": "control_element",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Control ID",
+                "hint": "Control ID for request as a whole.",
+                "optional": true,
+                "type": "string",
+                "name": "controlid"
+              },
+              {
+                "control_type": "checkbox",
+                "label": "Unique ID",
+                "parse_output": "float_conversion",
+                "hint": "Used in conjuction with \"Control ID\". Specifies whether a request can be submitted more than once without an error.When set to Yes, which is the default, a request cannot be repeated. The \"Control ID\" attribute of the <function> element will be checked to determine if the operation was previously executed and completed. When set to No, the system allows the operation to execute any number of times.",
+                "toggle_hint": "Select from list",
+                "toggle_field": {
+                  "name": "uniqueid",
+                  "label": "Unique ID",
+                  "hint": "Used in conjuction with \"Control ID\". Specifies whether a request can be submitted more than once without an error.When set to true, which is the default, a request cannot be repeated. The \"Control ID\" attribute of the <function> element will be checked to determine if the operation was previously executed and completed. When set to false, the system allows the operation to execute any number of times.",
+                  "toggle_hint": "Use custom value",
+                  "optional": true,
+                  "control_type": "text",
+                  "type": "string"
+                },
+                "optional": true,
+                "type": "number",
+                "name": "uniqueid"
+              },
+              {
+                "control_type": "select",
+                "label": "DTD version",
+                "hint": "Identifies the version of the API in use. The value of 3.0 (default) is strongly recommended as it provides access to both the generic functions and the object-specific functions.",
+                "pick_list": [
+                  [
+                    "3.0",
+                    "3.0"
+                  ],
+                  [
+                    "2.1",
+                    "2.1"
+                  ]
+                ],
+                "optional": true,
+                "type": "string",
+                "name": "dtdversion"
+              }
+            ],
+            "type": "object"
+          },
+          {
+            "control_type": "key_value",
+            "empty_list_text": "The header 'x-intacct-xml-request' is sent as 'Content-Type' by default.",
+            "empty_list_title": "Does this HTTP request require extra headers?",
+            "extends_schema": true,
+            "item_label": "Header",
+            "label": "Request headers",
+            "name": "request_headers",
+            "of": "object",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Key",
+                "optional": true,
+                "type": "string",
+                "name": "key"
+              },
+              {
+                "control_type": "text",
+                "label": "Value",
+                "optional": true,
+                "type": "string",
+                "name": "value"
+              }
+            ],
+            "sticky": false,
+            "type": "array"
+          },
+          {
+            "control_type": "schema-designer",
+            "extends_schema": true,
+            "label": "Response body",
+            "name": "output",
+            "optional": true,
+            "sample_data_type": "json_input",
+            "sticky": true,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "control_type": "schema-designer",
+            "extends_schema": true,
+            "label": "Response headers",
+            "name": "response_headers",
+            "optional": true,
+            "sample_data_type": "json_input",
+            "sticky": false,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "control_type": "select",
+            "default": "xml",
+            "extends_schema": true,
+            "label": "Response type",
+            "name": "response_type",
+            "optional": true,
+            "pick_list": [
+              [
+                "XML response",
+                "xml"
+              ],
+              [
+                "JSON response",
+                "json"
+              ],
+              [
+                "Raw response",
+                "raw"
+              ]
+            ],
+            "sticky": true,
+            "type": "string"
+          },
+          {
+            "control_type": "select",
+            "hint": "If <b>Yes</b>, the response returned with the failure status will be marked as an unsuccessful action, the error message is surfaced to the job report. If <b>No</b>, the response with failure status will be parsed and captured in the action output without raising any errors. This is useful for capturing the batch action (with multiple functions inside content tag) results.",
+            "label": "Mark failure status in response as error?",
+            "name": "surface_errors",
+            "optional": true,
+            "pick_list": [
+              [
+                "No",
+                "no"
+              ],
+              [
+                "Yes",
+                "yes"
+              ]
+            ],
+            "sticky": true,
+            "toggle_field": {
+              "name": "surface_errors",
+              "label": "Mark failure status in response as error?",
+              "hint": "If <b>yes</b>, the response returned with the failure status will be marked as an unsuccessful action, the error message is surfaced to the job report. If <b>no</b>, the response with failure status will be parsed and captured in the action output without raising any errors. This is useful for capturing the batch action (with multiple functions inside content tag) results.",
+              "toggle_hint": "Use custom value",
+              "sticky": true,
+              "control_type": "text",
+              "optional": true,
+              "type": "string"
+            },
+            "toggle_hint": "Select from list",
+            "type": "string"
+          },
+          {
+            "control_type": "text",
+            "hint": "If you are retrieving multiple locations using readByQuery, you can specify \"location\" as value. This mainly helps to parse the response XML and group the same tags as array. Provide comma-separated values for specifying multiple array tags.",
+            "label": "Array tags in XML response",
+            "name": "array_tags",
+            "optional": true,
+            "sticky": true,
+            "type": "string"
+          }
+        ],
+        "visible_config_fields": [
+          "action_name",
+          "operation_element",
+          "operation_element.content_data",
+          "output",
+          "response_type",
+          "surface_errors",
+          "response_headers"
+        ],
+        "uuid": "dc827446-2a04-46af-b111-c49b983cad17",
+        "skip": true
+      },
+      {
+        "number": 8,
+        "provider": "sage_intacct_custom__connector_908715_1704571680",
+        "name": "custom_action",
+        "as": "9d0037e0",
+        "title": null,
+        "description": "<span class=\"provider\">Custom action</span> in <span class=\"provider\">Sage Intacct (Custom)</span>",
+        "keyword": "action",
+        "input": {
+          "action_name": "Custom action",
+          "operation_element": {
+            "content_data": "<content>\n      <!-- Search call sample -->\n      <function controlid=\"UUID-1\">\n        <readByQuery>\n          <object>channel</object>\n          <fields>*</fields>\n          <query></query>\n          <pagesize>10</pagesize>\n          <returnFormat>xml</returnFormat>\n        </readByQuery>\n      </function>\n\n      <!-- Create call sample -->\n      <!--\n      <function controlid=\"UUID-2\">\n        <create>\n           <LOCATION>\n             <LOCATIONID>23</LOCATIONID>\n             <NAME>HQ</NAME>\n           </LOCATION>\n        </create>\n      </function>\n      -->\n    </content>"
+          },
+          "response_type": "xml"
+        },
+        "extended_output_schema": [
+          {
+            "label": "Body",
+            "name": "body",
+            "optional": true,
+            "properties": [
+
+            ],
+            "type": "object"
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "control_type": "text",
+            "default": "Custom action",
+            "extends_schema": true,
+            "hint": "Give this action you're building a descriptive name, e.g. Create customer, Get customer",
+            "label": "Action name",
+            "name": "action_name",
+            "optional": false,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "hint": "Provides the content for the request. <a href='https://developer.intacct.com/web-services/requests/#operation-element' target='_blank'>Learn more</a>",
+            "label": "Operation element of XML request",
+            "name": "operation_element",
+            "optional": false,
+            "properties": [
+              {
+                "control_type": "checkbox",
+                "label": "Transaction",
+                "parse_output": "float_conversion",
+                "hint": "Specifies whether all the functions in the operation block represent a single transaction. When set to Yes, all of the functions are treated as a single transaction. If one function fails, all previously executed functions within the operation are rolled back. This is useful for groups of functions that rely on each other to change information in the database. When set to No, which is the default, functions execute independently. If one function fails, others still proceed.",
+                "toggle_hint": "Select from list",
+                "toggle_field": {
+                  "name": "transaction",
+                  "label": "Transaction",
+                  "hint": "Specifies whether all the functions in the operation block represent a single transaction. When set to true, all of the functions are treated as a single transaction. If one function fails, all previously executed functions within the operation are rolled back. This is useful for groups of functions that rely on each other to change information in the database. When set to false, which is the default, functions execute independently. If one function fails, others still proceed.",
+                  "toggle_hint": "Use custom value",
+                  "optional": true,
+                  "control_type": "text",
+                  "type": "string"
+                },
+                "optional": true,
+                "type": "number",
+                "name": "transaction"
+              },
+              {
+                "control_type": "text-area",
+                "label": "Content part of XML request",
+                "hint": "Supplies one or more function elements to be executed.  Provide a valid XML with <b>&lt;content&gt;...&lt;/content&gt;</b> tag to send with the request. <a href='https://developer.intacct.com/web-services/requests/#content-element' target='_blank'>Learn more</a>",
+                "default": "<content>\n      <!-- Search call sample -->\n      <function controlid=\"UUID-1\">\n        <readByQuery>\n          <object>LOCATION</object>\n          <fields>*</fields>\n          <query></query>\n          <pagesize>2</pagesize>\n          <returnFormat>xml</returnFormat>\n        </readByQuery>\n      </function>\n\n      <!-- Create call sample -->\n      <!--\n      <function controlid=\"UUID-2\">\n        <create>\n           <LOCATION>\n             <LOCATIONID>23</LOCATIONID>\n             <NAME>HQ</NAME>\n           </LOCATION>\n        </create>\n      </function>\n      -->\n    </content>",
+                "optional": false,
+                "type": "string",
+                "name": "content_data"
+              }
+            ],
+            "type": "object"
+          },
+          {
+            "hint": "Control element includes your Web Services credentials and applies to the entire request. <a href='https://developer.intacct.com/web-services/requests/#control-element' target='_blank'>Learn more</a>",
+            "label": "Control element of XML request",
+            "name": "control_element",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Control ID",
+                "hint": "Control ID for request as a whole.",
+                "optional": true,
+                "type": "string",
+                "name": "controlid"
+              },
+              {
+                "control_type": "checkbox",
+                "label": "Unique ID",
+                "parse_output": "float_conversion",
+                "hint": "Used in conjuction with \"Control ID\". Specifies whether a request can be submitted more than once without an error.When set to Yes, which is the default, a request cannot be repeated. The \"Control ID\" attribute of the <function> element will be checked to determine if the operation was previously executed and completed. When set to No, the system allows the operation to execute any number of times.",
+                "toggle_hint": "Select from list",
+                "toggle_field": {
+                  "name": "uniqueid",
+                  "label": "Unique ID",
+                  "hint": "Used in conjuction with \"Control ID\". Specifies whether a request can be submitted more than once without an error.When set to true, which is the default, a request cannot be repeated. The \"Control ID\" attribute of the <function> element will be checked to determine if the operation was previously executed and completed. When set to false, the system allows the operation to execute any number of times.",
+                  "toggle_hint": "Use custom value",
+                  "optional": true,
+                  "control_type": "text",
+                  "type": "string"
+                },
+                "optional": true,
+                "type": "number",
+                "name": "uniqueid"
+              },
+              {
+                "control_type": "select",
+                "label": "DTD version",
+                "hint": "Identifies the version of the API in use. The value of 3.0 (default) is strongly recommended as it provides access to both the generic functions and the object-specific functions.",
+                "pick_list": [
+                  [
+                    "3.0",
+                    "3.0"
+                  ],
+                  [
+                    "2.1",
+                    "2.1"
+                  ]
+                ],
+                "optional": true,
+                "type": "string",
+                "name": "dtdversion"
+              }
+            ],
+            "type": "object"
+          },
+          {
+            "control_type": "key_value",
+            "empty_list_text": "The header 'x-intacct-xml-request' is sent as 'Content-Type' by default.",
+            "empty_list_title": "Does this HTTP request require extra headers?",
+            "extends_schema": true,
+            "item_label": "Header",
+            "label": "Request headers",
+            "name": "request_headers",
+            "of": "object",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Key",
+                "optional": true,
+                "type": "string",
+                "name": "key"
+              },
+              {
+                "control_type": "text",
+                "label": "Value",
+                "optional": true,
+                "type": "string",
+                "name": "value"
+              }
+            ],
+            "sticky": false,
+            "type": "array"
+          },
+          {
+            "control_type": "schema-designer",
+            "extends_schema": true,
+            "label": "Response body",
+            "name": "output",
+            "optional": true,
+            "sample_data_type": "json_input",
+            "sticky": true,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "control_type": "schema-designer",
+            "extends_schema": true,
+            "label": "Response headers",
+            "name": "response_headers",
+            "optional": true,
+            "sample_data_type": "json_input",
+            "sticky": false,
+            "type": "string",
+            "schema_neutral": true
+          },
+          {
+            "control_type": "select",
+            "default": "xml",
+            "extends_schema": true,
+            "label": "Response type",
+            "name": "response_type",
+            "optional": true,
+            "pick_list": [
+              [
+                "XML response",
+                "xml"
+              ],
+              [
+                "JSON response",
+                "json"
+              ],
+              [
+                "Raw response",
+                "raw"
+              ]
+            ],
+            "sticky": true,
+            "type": "string"
+          },
+          {
+            "control_type": "select",
+            "hint": "If <b>Yes</b>, the response returned with the failure status will be marked as an unsuccessful action, the error message is surfaced to the job report. If <b>No</b>, the response with failure status will be parsed and captured in the action output without raising any errors. This is useful for capturing the batch action (with multiple functions inside content tag) results.",
+            "label": "Mark failure status in response as error?",
+            "name": "surface_errors",
+            "optional": true,
+            "pick_list": [
+              [
+                "No",
+                "no"
+              ],
+              [
+                "Yes",
+                "yes"
+              ]
+            ],
+            "sticky": true,
+            "toggle_field": {
+              "name": "surface_errors",
+              "label": "Mark failure status in response as error?",
+              "hint": "If <b>yes</b>, the response returned with the failure status will be marked as an unsuccessful action, the error message is surfaced to the job report. If <b>no</b>, the response with failure status will be parsed and captured in the action output without raising any errors. This is useful for capturing the batch action (with multiple functions inside content tag) results.",
+              "toggle_hint": "Use custom value",
+              "sticky": true,
+              "control_type": "text",
+              "optional": true,
+              "type": "string"
+            },
+            "toggle_hint": "Select from list",
+            "type": "string"
+          }
+        ],
+        "uuid": "6871ff4e-a2ed-46ad-8680-9683a8198b9e",
+        "skip": true
+      },
+      {
+        "number": 9,
+        "provider": "workato_recipe_function",
+        "name": "return_result",
+        "as": "ff9fe940",
+        "keyword": "action",
+        "input": {
+        },
+        "uuid": "0ebb249a-cc53-4070-84e9-205821820bac"
+      }
+    ],
+    "uuid": "7a2d0dda-79a4-4c7e-baaa-45eeb346c5cc",
+    "unfinished": false
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "workato_recipe_function",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "sage_intacct_custom__connector_908715_1704571680",
+      "skip_validation": false,
+      "account_id": {
+        "zip_name": "SalvationArmy/sharat.connection.json",
+        "name": "Sharat",
+        "folder": "SalvationArmy",
+        "custom": true
+      }
+    },
+    {
+      "keyword": "application",
+      "provider": "workato_template",
+      "skip_validation": true,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "workato_variable",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "lookup_table",
+      "skip_validation": false,
+      "account_id": null
+    }
+  ]
+}
